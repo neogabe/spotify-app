@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
-const querystring = require('querystring');
+const querystring = require('query-string');
 const app = express();
 const PORT = 8888;
 
@@ -53,16 +53,30 @@ app.get('/callback', (req, res) => {
       Authorization: `Basic ${new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
     },
   })
-    .then(response => {
-      if (response.status === 200) {
-        res.send(`<pre>${JSON.stringify(response.data, null, 2)}</pre>`);
-      } else {
-        res.send(response);
-      }
-    })
-    .catch(error => {
-      res.send(error);
-    });
+  .then(response => {
+    if (response.status === 200) {
+
+      const { access_token, token_type } = response.data;
+
+      axios.get('https://api.spotify.com/v1/me', {
+        headers: {
+          Authorization: `${token_type} ${access_token}`
+        }
+      })
+        .then(response => {
+          res.send(`<pre>${JSON.stringify(response.data, null, 2)}</pre>`);
+        })
+        .catch(error => {
+          res.send(error);
+        });
+
+    } else {
+      res.send(response);
+    }
+  })
+  .catch(error => {
+    res.send(error);
+  });
 });
 
 app.listen(PORT, () => {
