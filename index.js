@@ -2,8 +2,11 @@ const express = require('express');
 const axios = require('axios');
 const querystring = require('query-string');
 const app = express();
+const path = require('path');
 
 require('dotenv').config();
+
+app.use(express.static(path.resolve(__dirname, './client/build')));
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -105,6 +108,10 @@ app.get('/refresh_token', (req, res) => {
     .catch((error) => {
       res.send(error);
     });
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
 });
 
 app.listen(PORT, () => {
