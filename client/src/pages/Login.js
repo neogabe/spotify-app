@@ -24,9 +24,13 @@ const LoginButton = styled.a`
   }
 `;
 
+const LOGIN_URI = process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:8888/login'
+    : 'https://gabe-spotify-project.onrender.com/login';
+
 const Login = () => (
   <LoginContainer>
-    <LoginButton href='http://localhost:8888/login'>
+    <LoginButton href={LOGIN_URI}>
       Entrar com o Spotify
     </LoginButton>
   </LoginContainer>
