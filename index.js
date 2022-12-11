@@ -110,10 +110,6 @@ app.get('/refresh_token', (req, res) => {
     });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-});
-
 app.listen(PORT, () => {
   console.log(`Express app listening at http://localhost:${PORT}`);
 });
